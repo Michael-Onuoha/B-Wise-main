@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import bwiseLogo from './assets/bwiseLogo.png';
+import Dashboard from './components/Dashboard';
 
 const PHASES = {
   assistant: [
@@ -72,6 +73,7 @@ function PhaseGrid({ phases }) {
 }
 
 export default function App() {
+  const [view, setView] = useState('landing');
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('');
 
@@ -97,6 +99,10 @@ export default function App() {
   const scrollTo = (id) => {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
   };
+
+  if (view === 'dashboard') {
+    return <Dashboard onBackToHome={() => setView('landing')} />;
+  }
 
   return (
     <div className="font-sans text-bwise-dark w-full overflow-x-hidden">
@@ -124,12 +130,18 @@ export default function App() {
           </nav>
 
           <div className="flex items-center gap-3">
-            <button className="hidden sm:block text-[13px] text-gray-400 hover:text-white transition-colors">Login</button>
             <button 
-              onClick={() => scrollTo('cta')}
-              className="text-[13px] bg-bwise-purple text-white px-4 py-2 rounded-lg font-medium hover:bg-bwise-purple/90 transition-colors"
+              onClick={() => setView('dashboard')} 
+              className="hidden sm:block text-[13px] text-gray-300 hover:text-white transition-colors border border-white/20 px-3.5 py-1.5 rounded-lg"
             >
-              Try Demo
+              Sign In
+            </button>
+            <button 
+              onClick={() => setView('dashboard')}
+              className="text-[13px] bg-bwise-purple text-white px-4 py-2 rounded-lg font-medium hover:bg-bwise-purple/90 transition-all shadow-[0_0_15px_rgba(175,1,175,0.4)] flex items-center gap-1.5"
+            >
+              <span>Launch Dashboard</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </button>
           </div>
         </div>
@@ -153,9 +165,25 @@ export default function App() {
             Smarter business banking,<br />
             <span className="text-bwise-purple">powered by AI</span>
           </h1>
-          <p className="text-[17px] text-gray-400 max-w-[520px] mx-auto leading-relaxed mb-16">
+          <p className="text-[17px] text-gray-400 max-w-[520px] mx-auto leading-relaxed mb-8">
             B-Wise is an AI-powered financial companion for Nigerian SMEs. Track cash, manage payroll, detect fraud, and prep taxes.
           </p>
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+            <button
+              onClick={() => setView('dashboard')}
+              className="bg-[#AF01AF] hover:bg-[#AF01AF]/90 text-white font-medium px-8 py-3.5 rounded-xl text-sm transition-all shadow-[0_0_25px_rgba(175,1,175,0.5)] flex items-center gap-2 hover:scale-105"
+            >
+              <span>Open Live SME Dashboard</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
+            <button
+              onClick={() => scrollTo('assistant')}
+              className="bg-white/10 hover:bg-white/20 text-gray-200 border border-white/15 px-6 py-3.5 rounded-xl text-sm transition-colors"
+            >
+              Explore Features
+            </button>
+          </div>
 
           <div className="relative w-full max-w-[720px] h-[600px] mx-auto" style={{ perspective: '1200px' }}>
 

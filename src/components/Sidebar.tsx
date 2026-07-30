@@ -6,15 +6,17 @@ import {
   FileCheck,
   Wallet,
   List,
+  Home,
   Settings
 } from 'lucide-react';
 
 interface SidebarProps {
   activeTab: string;
   onTabChange: (tab: string) => void;
+  onNavigateLanding?: () => void;
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
+export const Sidebar: React.FC<SidebarProps> = ({ activeTab, onTabChange, onNavigateLanding }) => {
   const navItems = [
     { id: 'overview', title: 'Dashboard & Wallet', icon: LayoutGrid },
     { id: 'ai_analytics', title: 'AI Analytics & Restock Predictor', icon: Sparkles },
@@ -25,12 +27,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
   ];
 
   return (
-    <aside className="w-[88px] xl:w-[100px] bg-[#3B1053] flex flex-col items-center py-6 border-r border-white/10 flex-shrink-0 select-none sticky top-0 h-screen z-30">
+    <aside data-tutorial="sidebar" className="w-[88px] xl:w-[100px] bg-[#3B1053] flex flex-col items-center py-6 border-r border-white/10 flex-shrink-0 select-none sticky top-0 h-screen z-30">
       {/* Brand Logo */}
       <div 
         className="w-[44px] h-[44px] xl:w-[52px] xl:h-[52px] mb-[32px] xl:mb-[40px] cursor-pointer flex items-center justify-center hover:opacity-90 transition-opacity drop-shadow-md" 
-        onClick={() => onTabChange('overview')}
-        title="Payline Business Home"
+        onClick={() => onNavigateLanding ? onNavigateLanding() : onTabChange('overview')}
+        title="B-Wise Home & Landing Page"
       >
         <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
           <rect width="100" height="100" rx="22" fill="#3B1053"/>
@@ -42,6 +44,19 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
 
       {/* Main Navigation Items */}
       <nav className="flex flex-col gap-3 flex-1">
+        {onNavigateLanding && (
+          <button
+            onClick={onNavigateLanding}
+            title="Landing Page Overview"
+            className="w-[44px] h-[44px] xl:w-[50px] xl:h-[50px] flex items-center justify-center rounded-[14px] xl:rounded-[16px] text-white/50 hover:text-white hover:bg-white/10 transition-all cursor-pointer relative group"
+          >
+            <Home className="w-[20px] h-[20px] xl:w-[22px] xl:h-[22px]" />
+            <span className="absolute left-full ml-3 px-2.5 py-1 bg-[#1C1C1E] text-white text-[11px] font-bold rounded-lg whitespace-nowrap opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity shadow-lg z-50">
+              Landing Page
+            </span>
+          </button>
+        )}
+
         {navItems.map((item) => {
           const IconComp = item.icon;
           const isActive = activeTab === item.id;

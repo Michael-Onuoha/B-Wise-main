@@ -50,7 +50,6 @@ export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
       fee: 0.00,
     });
 
-    // Reset and close
     setMerchantName('');
     setAmount('');
     onClose();

@@ -31,7 +31,7 @@ export const AskBAIDrawer: React.FC<AskBAIDrawerProps> = ({ isOpen, onClose, tra
     {
       id: 'welcome',
       sender: 'ai',
-      text: "Hello William! I'm **B-AI**, your financial assistant. Ask me anything about your payments, merchant spending, failed transactions, or account analytics.",
+      text: "Hello Michael! I'm **B-AI**, your financial assistant. Ask me anything about your payments, merchant spending, failed transactions, or account analytics.",
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     },
   ]);
@@ -86,10 +86,26 @@ export const AskBAIDrawer: React.FC<AskBAIDrawerProps> = ({ isOpen, onClose, tra
     setIsLoading(true);
 
     try {
+      const storedUid = localStorage.getItem('bmoni_user_id') || '1701f90b-2e62-401e-8c57-0d03c53b6525';
+      let localTxs: any[] = [];
+      try {
+        localTxs = JSON.parse(localStorage.getItem(`bmoni_txs_${storedUid}`) || '[]');
+      } catch (e) {
+        localTxs = [];
+      }
+
       const res = await fetch('/api/ask-b-ai', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt: textToSend, transactions }),
+        body: JSON.stringify({
+          prompt: textToSend,
+          transactions: [...localTxs, ...transactions],
+          userProfile: {
+            bmoniUserId: storedUid,
+            name: 'Michael Onuoha',
+            email: 'michaelonuoha.01@gmail.com'
+          }
+        }),
       });
 
       const data = await res.json();

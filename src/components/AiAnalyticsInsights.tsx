@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Transaction } from '../types';
 import {
   Sparkles,
   ShieldAlert,
@@ -19,12 +20,64 @@ import {
 
 interface AiAnalyticsInsightsProps {
   onOpenAskBAI: (initialPrompt?: string) => void;
+  transactions?: Transaction[];
 }
 
-export const AiAnalyticsInsights: React.FC<AiAnalyticsInsightsProps> = ({ onOpenAskBAI }) => {
+export const AiAnalyticsInsights: React.FC<AiAnalyticsInsightsProps> = ({ onOpenAskBAI, transactions }) => {
   const [selectedAdvice, setSelectedAdvice] = useState<{ title: string; advice: string; category: string } | null>(null);
   const [reorderStatus, setReorderStatus] = useState<'idle' | 'processing' | 'done'>('idle');
   const [activeFilter, setActiveFilter] = useState<'all' | 'leaks' | 'fraud' | 'restock'>('all');
+
+  const [aiOverviewText, setAiOverviewText] = useState<string | null>(null);
+  const [isGeneratingOverview, setIsGeneratingOverview] = useState<boolean>(false);
+  const [overviewError, setOverviewError] = useState<string | null>(null);
+
+  const fetchLiveGeminiOverview = async () => {
+    setIsGeneratingOverview(true);
+    setOverviewError(null);
+    try {
+      const storedUid = localStorage.getItem('bmoni_user_id') || '1701f90b-2e62-401e-8c57-0d03c53b6525';
+      let localTxs: any[] = [];
+      try {
+        localTxs = JSON.parse(localStorage.getItem(`bmoni_txs_${storedUid}`) || '[]');
+      } catch (e) {
+        localTxs = [];
+      }
+
+      const res = await fetch('/api/gemini/overview', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userProfile: {
+            id: storedUid,
+            name: 'Michael Onuoha',
+            email: 'michaelonuoha.01@gmail.com'
+          },
+          balances: [
+            { currency: 'CNGN', balance: '9950.00' },
+            { currency: 'USDB', balance: '1250.00' }
+          ],
+          recentActivities: localTxs,
+          focusArea: 'Smart Wallet Yield, Liquidity Protection & FX Cost Reduction'
+        })
+      });
+
+      const data = await res.json();
+      if (res.ok && data.ok) {
+        setAiOverviewText(data.summary);
+      } else {
+        setOverviewError(data.error || 'Failed to generate Gemini AI Overview');
+      }
+    } catch (err: any) {
+      setOverviewError(err.message || 'Error connecting to Gemini AI');
+    } finally {
+      setIsGeneratingOverview(false);
+    }
+  };
+
+  React.useEffect(() => {
+    fetchLiveGeminiOverview();
+  }, []);
 
   const fraudAlerts = [
     {
@@ -35,7 +88,8 @@ export const AiAnalyticsInsights: React.FC<AiAnalyticsInsightsProps> = ({ onOpen
       date: 'Today at 02:14 PM',
       severity: 'high',
       description: 'Two identical charges of $149.00 detected within 3 minutes of each other.',
-      advice: 'We recommend requesting an immediate charge reversal via BMoni dispute API or contacting SaaS Cloud Support.'
+      advice: 'We recommend requesting an immediate charge reversal via BMoni dispute API or contacting SaaS Cloud Support.',
+      logoUrl: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=100&auto=format&fit=crop&q=80'
     },
     {
       id: 'f2',
@@ -45,34 +99,38 @@ export const AiAnalyticsInsights: React.FC<AiAnalyticsInsightsProps> = ({ onOpen
       date: 'Yesterday at 11:45 PM',
       severity: 'medium',
       description: 'Transaction originated from un-whitelisted IP subnet outside primary operating region.',
-      advice: 'Review API key authorization settings and enable IP restriction policies on your BMoni embedded developer dashboard.'
+      advice: 'Review API key authorization settings and enable IP restriction policies on your BMoni embedded developer dashboard.',
+      logoUrl: 'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=100&auto=format&fit=crop&q=80'
     }
   ];
 
   const spendingLeaks = [
     {
       id: 'l1',
-      title: 'Unused Design Software Seats',
+      title: 'Unused Figma & Design Seats',
       monthlyCost: '$180/mo',
       annualImpact: '$2,160/yr',
       recommendation: '3 out of 8 licensed seats have had zero activity for 45 consecutive days.',
-      potentialSavings: '$67.50/mo'
+      potentialSavings: '$67.50/mo',
+      logoUrl: 'https://images.unsplash.com/photo-1626785774573-4b799315345d?w=100&auto=format&fit=crop&q=80'
     },
     {
       id: 'l2',
-      title: 'Redundant Cloud Storage Plans',
+      title: 'Redundant AWS & Cloud Bucket Storage',
       monthlyCost: '$95/mo',
       annualImpact: '$1,140/yr',
       recommendation: 'Overlap detected between AWS S3 storage tier and Google Cloud Storage bucket.',
-      potentialSavings: '$45.00/mo'
+      potentialSavings: '$45.00/mo',
+      logoUrl: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=100&auto=format&fit=crop&q=80'
     },
     {
       id: 'l3',
-      title: 'Un-Optimized Foreign Wire Fees',
+      title: 'Un-Optimized Cross-Border Wire Fees',
       monthlyCost: '$210/mo',
       annualImpact: '$2,520/yr',
       recommendation: 'Switching cross-border USD payments to BMoni CNGN Smart Wallet settlement saves 1.8% per transfer.',
-      potentialSavings: '$140.00/mo'
+      potentialSavings: '$140.00/mo',
+      logoUrl: 'https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=100&auto=format&fit=crop&q=80'
     }
   ];
 
@@ -133,6 +191,80 @@ export const AiAnalyticsInsights: React.FC<AiAnalyticsInsightsProps> = ({ onOpen
             </button>
           ))}
         </div>
+      </div>
+
+      {/* Live Gemini AI Executive Overview Section */}
+      <div className="bg-white rounded-[24px] p-6 xl:p-7 shadow-xs border border-[#E5E5EA]">
+        <div className="flex justify-between items-center mb-5">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-[#FAF5FF] flex items-center justify-center text-[#3B1053] border border-[#E9D5FF]">
+              <Sparkles className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="text-lg font-black text-[#1C1C1E] tracking-tight">Gemini AI Executive Overview</h3>
+              <p className="text-xs text-[#8E8E93] font-medium">Real-time smart balance and risk summary</p>
+            </div>
+          </div>
+          <button
+            onClick={fetchLiveGeminiOverview}
+            disabled={isGeneratingOverview}
+            className="px-4 py-2 rounded-full bg-[#FAF5FF] hover:bg-[#F3E8FF] text-[#3B1053] font-extrabold text-xs flex items-center gap-2 border border-[#E9D5FF] transition-all cursor-pointer disabled:opacity-50"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 ${isGeneratingOverview ? 'animate-spin' : ''}`} />
+            <span>{isGeneratingOverview ? 'Analyzing...' : 'Refresh AI'}</span>
+          </button>
+        </div>
+
+        {isGeneratingOverview ? (
+          <div className="p-8 text-center flex flex-col items-center justify-center gap-3">
+            <RefreshCw className="w-8 h-8 text-[#3B1053] animate-spin" />
+            <p className="text-sm font-bold text-[#636366]">Auditing smart balances and liquidity...</p>
+          </div>
+        ) : overviewError ? (
+          <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-semibold">
+            {overviewError}
+          </div>
+        ) : aiOverviewText ? (
+          <div className="bg-[#FAF8FF] border border-[#E9D5FF] rounded-2xl p-5">
+            {(() => {
+              const clean = aiOverviewText
+                .replace(/\*{2,3}/g, '')
+                .replace(/#{1,6}\s?/g, '')
+                .trim();
+
+              const blocks = clean.split(/\n+/).filter(b => b.trim().length > 0);
+
+              return (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {blocks.map((block, idx) => {
+                    const colonIdx = block.indexOf(':');
+                    let title = '';
+                    let body = block;
+                    if (colonIdx > 0 && colonIdx < 40) {
+                      title = block.substring(0, colonIdx).replace(/^[•\-\*\s]+/, '').trim();
+                      body = block.substring(colonIdx + 1).trim();
+                    } else {
+                      body = block.replace(/^[•\-\*\s]+/, '').trim();
+                    }
+
+                    return (
+                      <div key={idx} className="bg-white border border-[#E9D5FF] rounded-xl p-4 shadow-2xs flex flex-col gap-1.5">
+                        {title && (
+                          <span className="text-xs font-black text-[#3B1053] uppercase tracking-wider">
+                            {title}
+                          </span>
+                        )}
+                        <p className="text-xs text-[#1C1C1E] font-medium leading-relaxed">
+                          {body}
+                        </p>
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            })()}
+          </div>
+        ) : null}
       </div>
 
       {/* Grid: Restock Timing Predictor & Fraud Detection */}
@@ -258,14 +390,25 @@ export const AiAnalyticsInsights: React.FC<AiAnalyticsInsightsProps> = ({ onOpen
                     className="p-4 rounded-2xl bg-[#F9F9FB] border border-rose-100 hover:border-rose-300 transition-colors space-y-2"
                   >
                     <div className="flex justify-between items-start">
-                      <div className="flex items-center gap-2">
-                        <AlertTriangle className="w-4 h-4 text-rose-500 flex-shrink-0" />
-                        <span className="text-xs font-extrabold text-[#1C1C1E]">{alert.type}</span>
-                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-rose-50 text-rose-700 font-bold uppercase">
-                          {alert.severity} Risk
-                        </span>
+                      <div className="flex items-center gap-2.5">
+                        <img
+                          src={alert.logoUrl}
+                          alt={alert.merchant}
+                          referrerPolicy="no-referrer"
+                          className="w-8 h-8 rounded-xl object-cover border border-[#E5E5EA] shadow-2xs flex-shrink-0"
+                        />
+                        <div>
+                          <div className="flex items-center gap-1.5">
+                            <AlertTriangle className="w-3.5 h-3.5 text-rose-500 flex-shrink-0" />
+                            <span className="text-xs font-black text-[#1C1C1E]">{alert.type}</span>
+                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-rose-50 text-rose-700 font-bold uppercase">
+                              {alert.severity} Risk
+                            </span>
+                          </div>
+                          <span className="text-[11px] font-bold text-[#636366]">{alert.merchant}</span>
+                        </div>
                       </div>
-                      <span className="text-xs font-extrabold text-rose-600">{alert.amount}</span>
+                      <span className="text-sm font-black text-rose-600">{alert.amount}</span>
                     </div>
 
                     <p className="text-xs text-[#3A3A3C] leading-relaxed">{alert.description}</p>
@@ -334,11 +477,19 @@ export const AiAnalyticsInsights: React.FC<AiAnalyticsInsightsProps> = ({ onOpen
                 className="p-5 rounded-2xl bg-[#F9F9FB] border border-[#E5E5EA] flex flex-col justify-between hover:border-[#3B1053]/40 transition-all group"
               >
                 <div className="space-y-3">
-                  <div className="flex justify-between items-start">
-                    <h4 className="text-sm font-extrabold text-[#1C1C1E] group-hover:text-[#3B1053] transition-colors">
-                      {leak.title}
-                    </h4>
-                    <span className="text-xs font-black px-2 py-0.5 rounded-lg bg-emerald-100 text-emerald-800">
+                  <div className="flex justify-between items-start gap-2">
+                    <div className="flex items-center gap-2.5">
+                      <img
+                        src={leak.logoUrl}
+                        alt={leak.title}
+                        referrerPolicy="no-referrer"
+                        className="w-9 h-9 rounded-xl object-cover border border-[#E5E5EA] shadow-2xs flex-shrink-0"
+                      />
+                      <h4 className="text-sm font-black text-[#1C1C1E] group-hover:text-[#3B1053] transition-colors leading-snug">
+                        {leak.title}
+                      </h4>
+                    </div>
+                    <span className="text-xs font-black px-2 py-1 rounded-lg bg-emerald-100 text-emerald-800 flex-shrink-0">
                       Save {leak.potentialSavings}
                     </span>
                   </div>

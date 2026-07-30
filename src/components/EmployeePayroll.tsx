@@ -31,6 +31,7 @@ export interface Employee {
   taxStatus: 'Deductible Expense' | 'Subject to PAYE';
   payStatus: 'Paid' | 'Pending' | 'Processing';
   lastPaidDate?: string;
+  avatarUrl?: string;
 }
 
 const INITIAL_EMPLOYEES: Employee[] = [
@@ -46,7 +47,8 @@ const INITIAL_EMPLOYEES: Employee[] = [
     walletAddress: '0x71C7656EC7ab88b098defB751B7401B5f6d8976F',
     taxStatus: 'Subject to PAYE',
     payStatus: 'Pending',
-    lastPaidDate: 'June 28, 2026'
+    lastPaidDate: 'June 28, 2026',
+    avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&auto=format&fit=crop&q=80'
   },
   {
     id: 'emp-2',
@@ -60,7 +62,8 @@ const INITIAL_EMPLOYEES: Employee[] = [
     walletAddress: '0x2546BcD3c84621e976D8185a91A922aE77ECEc30',
     taxStatus: 'Subject to PAYE',
     payStatus: 'Pending',
-    lastPaidDate: 'June 28, 2026'
+    lastPaidDate: 'June 28, 2026',
+    avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80'
   },
   {
     id: 'emp-3',
@@ -74,7 +77,8 @@ const INITIAL_EMPLOYEES: Employee[] = [
     walletAddress: '0xbDA5747bfd65F08deb54cb465eB3830908BC7a50',
     taxStatus: 'Deductible Expense',
     payStatus: 'Paid',
-    lastPaidDate: 'July 28, 2026'
+    lastPaidDate: 'July 28, 2026',
+    avatarUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&auto=format&fit=crop&q=80'
   },
   {
     id: 'emp-4',
@@ -88,7 +92,8 @@ const INITIAL_EMPLOYEES: Employee[] = [
     walletAddress: '0x14dC79964da2C08b23698B3D3cc7Ca32193d9955',
     taxStatus: 'Subject to PAYE',
     payStatus: 'Pending',
-    lastPaidDate: 'June 28, 2026'
+    lastPaidDate: 'June 28, 2026',
+    avatarUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&auto=format&fit=crop&q=80'
   }
 ];
 
@@ -238,30 +243,30 @@ export const EmployeePayroll: React.FC<EmployeePayrollProps> = ({ onOpenAskBAI, 
 
         {/* Metrics Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="p-4 rounded-2xl bg-[#F9F9FB] border border-[#E5E5EA]">
-            <span className="text-[11px] text-[#8E8E93] font-semibold block">Total Monthly Payroll</span>
-            <span className="text-2xl font-black text-[#1C1C1E]">₦{totalPayrollCNGN.toLocaleString()} CNGN</span>
-            <span className="text-[10px] text-[#8E8E93] block mt-1">{employees.length} Active Employees</span>
+          <div className="p-5 rounded-2xl bg-[#FAF5FF] border border-[#E9D5FF]">
+            <span className="text-xs text-[#8E8E93] font-bold uppercase tracking-wider block">Total Monthly Payroll</span>
+            <span className="text-3xl xl:text-4xl font-black text-[#3B1053] tracking-tight block mt-1">₦{totalPayrollCNGN.toLocaleString()}</span>
+            <span className="text-xs text-[#636366] font-semibold block mt-1.5">{employees.length} Active Employees</span>
           </div>
 
-          <div className="p-4 rounded-2xl bg-[#F9F9FB] border border-[#E5E5EA]">
-            <span className="text-[11px] text-[#8E8E93] font-semibold block">Pending Disbursal</span>
-            <span className="text-2xl font-black text-amber-600">₦{pendingPayrollCNGN.toLocaleString()} CNGN</span>
-            <span className="text-[10px] text-amber-700 block mt-1">
-              {employees.filter((e) => e.payStatus === 'Pending').length} Pending Payrolls
+          <div className="p-5 rounded-2xl bg-white border border-[#E5E5EA]">
+            <span className="text-xs text-[#8E8E93] font-bold uppercase tracking-wider block">Pending Disbursal</span>
+            <span className="text-3xl xl:text-4xl font-black text-[#1C1C1E] tracking-tight block mt-1">₦{pendingPayrollCNGN.toLocaleString()}</span>
+            <span className="text-xs text-[#636366] font-semibold block mt-1.5">
+              {employees.filter((e) => e.payStatus === 'Pending').length} Pending Disbursement
             </span>
           </div>
 
-          <div className="p-4 rounded-2xl bg-[#F9F9FB] border border-[#E5E5EA] flex flex-col justify-between">
+          <div className="p-5 rounded-2xl bg-white border border-[#E5E5EA] flex flex-col justify-between">
             <div>
-              <span className="text-[11px] text-[#8E8E93] font-semibold block">Batch Action</span>
-              <span className="text-xs font-bold text-[#1C1C1E]">Disburse all pending salaries</span>
+              <span className="text-xs text-[#8E8E93] font-bold uppercase tracking-wider block">Batch Action</span>
+              <span className="text-sm font-black text-[#1C1C1E]">Direct Smart Wallet Payout</span>
             </div>
 
             <button
               onClick={handleDisburseBatchPayroll}
               disabled={isProcessingBatch || pendingPayrollCNGN === 0}
-              className="mt-2 w-full py-2 bg-[#1C1C1E] hover:bg-[#3B1053] text-white disabled:opacity-50 text-xs font-extrabold rounded-xl transition-all cursor-pointer flex items-center justify-center gap-2 shadow-xs"
+              className="mt-3 w-full py-2.5 bg-[#3B1053] hover:bg-[#4E186E] text-[#DFFF4F] disabled:opacity-50 text-xs font-black rounded-xl transition-all cursor-pointer flex items-center justify-center gap-2 shadow-xs"
             >
               {isProcessingBatch ? (
                 <>
@@ -325,15 +330,24 @@ export const EmployeePayroll: React.FC<EmployeePayrollProps> = ({ onOpenAskBAI, 
             >
               <div className="flex justify-between items-start">
                 <div className="flex items-center gap-3">
-                  <div className="w-11 h-11 rounded-full bg-gradient-to-br from-[#3B1053] to-[#8B5CF6] text-white flex items-center justify-center font-bold text-sm shadow-xs">
-                    {emp.firstName[0]}
-                    {emp.lastName[0]}
-                  </div>
+                  {emp.avatarUrl ? (
+                    <img
+                      src={emp.avatarUrl}
+                      alt={`${emp.firstName} ${emp.lastName}`}
+                      referrerPolicy="no-referrer"
+                      className="w-11 h-11 rounded-full object-cover border-2 border-white shadow-xs flex-shrink-0"
+                    />
+                  ) : (
+                    <div className="w-11 h-11 rounded-full bg-gradient-to-br from-[#3B1053] to-[#8B5CF6] text-white flex items-center justify-center font-bold text-sm shadow-xs flex-shrink-0">
+                      {emp.firstName[0]}
+                      {emp.lastName[0]}
+                    </div>
+                  )}
                   <div>
-                    <h4 className="text-sm font-extrabold text-[#1C1C1E]">
+                    <h4 className="text-base font-black text-[#1C1C1E]">
                       {emp.firstName} {emp.lastName}
                     </h4>
-                    <span className="text-xs text-[#8E8E93] font-medium">{emp.role}</span>
+                    <span className="text-xs text-[#8E8E93] font-semibold">{emp.role}</span>
                   </div>
                 </div>
 

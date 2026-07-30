@@ -107,7 +107,7 @@ export const TransactionHistory: React.FC<TransactionHistoryProps> = ({
   return (
     <div className="bg-white rounded-[20px] p-6 shadow-xs border border-[#F2F2F7] flex-1 flex flex-col min-w-0 relative">
       {/* History Header */}
-      <div className="flex justify-between items-center mb-5 flex-wrap gap-3">
+      <div data-tutorial="tx-toolbar" className="flex justify-between items-center mb-5 flex-wrap gap-3">
         <div className="flex items-center gap-3">
           <h2 className="text-[18px] font-bold text-[#1C1C1E] font-sans tracking-[-0.3px]">
             History

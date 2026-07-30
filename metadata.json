@@ -1,0 +1,6 @@
+{
+  "name": "Payline Transactions",
+  "description": "A modern financial dashboard for quick transfers, payment analytics, and transaction history.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

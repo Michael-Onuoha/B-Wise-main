@@ -86,7 +86,7 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
             <div className="text-left hidden sm:block">
               <div className="text-[15px] font-bold text-[#1C1C1E] leading-tight font-sans">
-                Michael Onuoha
+                William Grace
               </div>
               <div className="text-[13px] text-[#8E8E93] leading-tight font-sans font-medium flex items-center gap-1">
                 <span>Admin</span>
@@ -99,8 +99,8 @@ export const Header: React.FC<HeaderProps> = ({
           {showProfileMenu && (
             <div className="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-xl border border-[#F2F2F7] py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
               <div className="px-4 py-2 border-b border-[#F2F2F7]">
-                <p className="text-xs font-semibold text-[#1C1C1E]">Michael Onuoha</p>
-                <p className="text-[11px] text-[#8E8E93]">michael.onuoha@payline.com</p>
+                <p className="text-xs font-semibold text-[#1C1C1E]">William Grace</p>
+                <p className="text-[11px] text-[#8E8E93]">william.grace@payline.com</p>
                 <div className="mt-2 bg-[#F5F5F7] p-2 rounded-lg flex justify-between items-center">
                   <span className="text-[10px] text-[#8E8E93] font-medium">Available Balance</span>
                   <span className="text-xs font-bold text-[#1C1C1E]">€{accountBalance.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>

@@ -30,7 +30,6 @@ export interface TaxTransaction {
   hasReceiptPdf: boolean;
   taxCategory: 'Operational Expense' | 'Capital Expenditure' | 'Employee Benefit' | 'Non-Deductible Personal';
   vatAmount: number;
-  merchantLogo?: string;
 }
 
 const INITIAL_TAX_TRANSACTIONS: TaxTransaction[] = [
@@ -46,8 +45,7 @@ const INITIAL_TAX_TRANSACTIONS: TaxTransaction[] = [
     receiptId: 'INV-2026-9921',
     hasReceiptPdf: true,
     taxCategory: 'Operational Expense',
-    vatAmount: 93.75,
-    merchantLogo: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=100&auto=format&fit=crop&q=80'
+    vatAmount: 93.75
   },
   {
     id: 'tx-102',
@@ -61,8 +59,7 @@ const INITIAL_TAX_TRANSACTIONS: TaxTransaction[] = [
     receiptId: 'INV-2026-8812',
     hasReceiptPdf: true,
     taxCategory: 'Operational Expense',
-    vatAmount: 36.00,
-    merchantLogo: 'https://images.unsplash.com/photo-1586075010923-2dd4570fb338?w=100&auto=format&fit=crop&q=80'
+    vatAmount: 36.00
   },
   {
     id: 'tx-103',
@@ -76,8 +73,7 @@ const INITIAL_TAX_TRANSACTIONS: TaxTransaction[] = [
     receiptId: 'INV-2026-7734',
     hasReceiptPdf: true,
     taxCategory: 'Employee Benefit',
-    vatAmount: 24.00,
-    merchantLogo: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=100&auto=format&fit=crop&q=80'
+    vatAmount: 24.00
   },
   {
     id: 'tx-104',
@@ -91,8 +87,7 @@ const INITIAL_TAX_TRANSACTIONS: TaxTransaction[] = [
     receiptId: 'INV-2026-5411',
     hasReceiptPdf: false,
     taxCategory: 'Non-Deductible Personal',
-    vatAmount: 0.00,
-    merchantLogo: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=100&auto=format&fit=crop&q=80'
+    vatAmount: 0.00
   },
   {
     id: 'tx-105',
@@ -106,8 +101,7 @@ const INITIAL_TAX_TRANSACTIONS: TaxTransaction[] = [
     receiptId: 'INV-2026-3392',
     hasReceiptPdf: true,
     taxCategory: 'Operational Expense',
-    vatAmount: 4.13,
-    merchantLogo: 'https://images.unsplash.com/photo-1626785774573-4b799315345d?w=100&auto=format&fit=crop&q=80'
+    vatAmount: 4.13
   }
 ];
 
@@ -186,40 +180,38 @@ export const TaxExpensePrep: React.FC<TaxExpensePrepProps> = ({ onOpenAskBAI }) 
 
         {/* Metrics Bar */}
         <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-          <div className="p-5 rounded-2xl bg-white border border-[#E5E5EA]">
-            <span className="text-xs text-[#8E8E93] font-bold uppercase tracking-wider block">Total Expenses</span>
-            <span className="text-3xl xl:text-4xl font-black text-[#1C1C1E] tracking-tight block mt-1">${totalExpense.toFixed(2)}</span>
-            <span className="text-xs text-[#636366] font-semibold block mt-1">{transactions.length} Transactions</span>
+          <div className="p-4 rounded-2xl bg-[#F9F9FB] border border-[#E5E5EA]">
+            <span className="text-[11px] text-[#8E8E93] font-semibold block">Total Logged Expenses</span>
+            <span className="text-2xl font-black text-[#1C1C1E]">${totalExpense.toFixed(2)}</span>
+            <span className="text-[10px] text-[#8E8E93] block mt-1">{transactions.length} Transactions</span>
           </div>
 
-          <div className="p-5 rounded-2xl bg-[#FAF5FF] border border-[#E9D5FF]">
-            <span className="text-xs text-[#8E8E93] font-bold uppercase tracking-wider block">Tax-Deductible</span>
-            <span className="text-3xl xl:text-4xl font-black text-[#3B1053] tracking-tight block mt-1">${deductibleTotal.toFixed(2)}</span>
-            <span className="text-xs text-emerald-700 font-extrabold block mt-1">
-              Est. CIT Savings: ${(deductibleTotal * 0.3).toFixed(2)}
+          <div className="p-4 rounded-2xl bg-[#F9F9FB] border border-[#E5E5EA]">
+            <span className="text-[11px] text-[#8E8E93] font-semibold block">Tax-Deductible Amount</span>
+            <span className="text-2xl font-black text-emerald-600">${deductibleTotal.toFixed(2)}</span>
+            <span className="text-[10px] text-emerald-700 block mt-1">
+              Estimated 30% CIT Savings: ${(deductibleTotal * 0.3).toFixed(2)}
             </span>
           </div>
 
-          <div className="p-5 rounded-2xl bg-white border border-[#E5E5EA]">
-            <span className="text-xs text-[#8E8E93] font-bold uppercase tracking-wider block">Claimable VAT</span>
-            <span className="text-3xl xl:text-4xl font-black text-[#1C1C1E] tracking-tight block mt-1">${totalVatClaimable.toFixed(2)}</span>
-            <span className="text-xs text-[#636366] font-semibold block mt-1">7.5% Tax Credit Eligible</span>
+          <div className="p-4 rounded-2xl bg-[#F9F9FB] border border-[#E5E5EA]">
+            <span className="text-[11px] text-[#8E8E93] font-semibold block">Claimable Input VAT</span>
+            <span className="text-2xl font-black text-indigo-700">${totalVatClaimable.toFixed(2)}</span>
+            <span className="text-[10px] text-indigo-800 block mt-1">7.5% Tax Credit Eligible</span>
           </div>
 
-          <div className="p-5 rounded-2xl bg-white border border-[#E5E5EA] flex flex-col justify-between space-y-2">
-            <div>
-              <div className="flex justify-between items-center text-xs font-black text-[#1C1C1E] mb-1">
-                <span>Receipt Status</span>
-                <span className="text-sm font-extrabold text-[#3B1053]">{matchPercentage}%</span>
-              </div>
-              <div className="w-full bg-[#E5E5EA] h-2.5 rounded-full overflow-hidden">
-                <div
-                  className="bg-[#3B1053] h-full rounded-full transition-all"
-                  style={{ width: `${matchPercentage}%` }}
-                />
-              </div>
+          <div className="p-4 rounded-2xl bg-[#F9F9FB] border border-[#E5E5EA] space-y-1">
+            <div className="flex justify-between items-center text-xs font-extrabold text-[#1C1C1E]">
+              <span>Documentation Readiness</span>
+              <span>{matchPercentage}%</span>
             </div>
-            <span className="text-xs text-[#636366] font-medium block">
+            <div className="w-full bg-[#E5E5EA] h-2.5 rounded-full overflow-hidden">
+              <div
+                className="bg-gradient-to-r from-[#3B1053] to-[#8B5CF6] h-full rounded-full"
+                style={{ width: `${matchPercentage}%` }}
+              />
+            </div>
+            <span className="text-[10px] text-[#8E8E93] block">
               {matchedReceiptsCount} of {transactions.length} receipts attached
             </span>
           </div>
@@ -271,24 +263,8 @@ export const TaxExpensePrep: React.FC<TaxExpensePrepProps> = ({ onOpenAskBAI }) 
               {filteredTx.map((tx) => (
                 <tr key={tx.id} className="hover:bg-[#F9F9FB] transition-colors">
                   <td className="py-3 px-3 font-bold text-[#1C1C1E]">
-                    <div className="flex items-center gap-2.5">
-                      {tx.merchantLogo ? (
-                        <img
-                          src={tx.merchantLogo}
-                          alt={tx.merchantName}
-                          referrerPolicy="no-referrer"
-                          className="w-8 h-8 rounded-xl object-cover border border-[#E5E5EA] shadow-2xs flex-shrink-0"
-                        />
-                      ) : (
-                        <div className="w-8 h-8 rounded-xl bg-purple-100 text-[#3B1053] flex items-center justify-center font-bold text-xs flex-shrink-0">
-                          {tx.merchantName[0]}
-                        </div>
-                      )}
-                      <div>
-                        <div className="font-extrabold text-[#1C1C1E]">{tx.merchantName}</div>
-                        <div className="text-[10px] text-[#8E8E93] font-medium">{tx.taxCategory}</div>
-                      </div>
-                    </div>
+                    <div>{tx.merchantName}</div>
+                    <div className="text-[10px] text-[#8E8E93] font-normal">{tx.taxCategory}</div>
                   </td>
                   <td className="py-3 px-3 text-[#8E8E93] font-medium">{tx.category}</td>
                   <td className="py-3 px-3 text-[#8E8E93] font-medium">{tx.date}</td>

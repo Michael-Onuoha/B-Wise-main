@@ -24,7 +24,6 @@ export interface BusinessVault {
   iconBg: string;
   accountNumber: string;
   isMainTreasury?: boolean;
-  vaultLogo?: string;
 }
 
 interface MultiAccountVaultsProps {
@@ -45,8 +44,7 @@ export const MultiAccountVaults: React.FC<MultiAccountVaultsProps> = ({
       balance: bmoniMainBalanceCNGN,
       iconBg: 'bg-[#3B1053]',
       accountNumber: '0x39e9aA93E8Ab2694BB25ad8D2d86BEd50741568F',
-      isMainTreasury: true,
-      vaultLogo: 'https://images.unsplash.com/photo-1541354329998-f4d9a9f9297f?w=100&auto=format&fit=crop&q=80'
+      isMainTreasury: true
     },
     {
       id: 'v-2',
@@ -55,8 +53,7 @@ export const MultiAccountVaults: React.FC<MultiAccountVaultsProps> = ({
       currency: 'CNGN',
       balance: 1680000,
       iconBg: 'bg-[#8B5CF6]',
-      accountNumber: '0x3892aF71B0c8227d816503c53b65259921c810',
-      vaultLogo: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=100&auto=format&fit=crop&q=80'
+      accountNumber: '0x3892aF71B0c8227d816503c53b65259921c810'
     },
     {
       id: 'v-3',
@@ -65,8 +62,7 @@ export const MultiAccountVaults: React.FC<MultiAccountVaultsProps> = ({
       currency: 'CNGN',
       balance: 450000,
       iconBg: 'bg-[#059669]',
-      accountNumber: '0x1477cB9910c227d816503c53b65259921c811',
-      vaultLogo: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=100&auto=format&fit=crop&q=80'
+      accountNumber: '0x1477cB9910c227d816503c53b65259921c811'
     },
     {
       id: 'v-4',
@@ -75,8 +71,7 @@ export const MultiAccountVaults: React.FC<MultiAccountVaultsProps> = ({
       currency: 'CNGN',
       balance: 320000,
       iconBg: 'bg-[#D97706]',
-      accountNumber: '0x9921dB4410c227d816503c53b65259921c812',
-      vaultLogo: 'https://images.unsplash.com/photo-1554224154-26032ffc0d07?w=100&auto=format&fit=crop&q=80'
+      accountNumber: '0x9921dB4410c227d816503c53b65259921c812'
     }
   ]);
 
@@ -194,25 +189,16 @@ export const MultiAccountVaults: React.FC<MultiAccountVaultsProps> = ({
             <div className="space-y-3">
               <div className="flex justify-between items-start">
                 <div className="flex items-center gap-3">
-                  {vault.vaultLogo ? (
-                    <img
-                      src={vault.vaultLogo}
-                      alt={vault.name}
-                      referrerPolicy="no-referrer"
-                      className="w-12 h-12 rounded-2xl object-cover border border-[#E5E5EA] shadow-xs flex-shrink-0"
-                    />
-                  ) : (
-                    <div
-                      className={`w-12 h-12 rounded-2xl ${vault.iconBg} text-white flex items-center justify-center font-bold shadow-xs flex-shrink-0`}
-                    >
-                      <Wallet className="w-6 h-6" />
-                    </div>
-                  )}
+                  <div
+                    className={`w-12 h-12 rounded-2xl ${vault.iconBg} text-white flex items-center justify-center font-bold shadow-xs`}
+                  >
+                    <Wallet className="w-6 h-6" />
+                  </div>
                   <div>
-                    <h3 className="text-lg font-black text-[#1C1C1E] group-hover:text-[#3B1053] transition-colors leading-snug">
+                    <h3 className="text-base font-extrabold text-[#1C1C1E] group-hover:text-[#3B1053] transition-colors">
                       {vault.name}
                     </h3>
-                    <p className="text-xs text-[#8E8E93] font-medium">{vault.purpose}</p>
+                    <p className="text-xs text-[#8E8E93]">{vault.purpose}</p>
                   </div>
                 </div>
 
@@ -228,16 +214,15 @@ export const MultiAccountVaults: React.FC<MultiAccountVaultsProps> = ({
                 )}
               </div>
 
-              <div className="p-5 rounded-2xl bg-[#FAF5FF] border border-[#E9D5FF] space-y-1">
-                <span className="text-xs text-[#8E8E93] font-bold uppercase tracking-wider block">Available Balance</span>
-                <div className="text-3xl xl:text-4xl font-black text-[#3B1053] tracking-tight">
-                  ₦{vault.balance.toLocaleString()} <span className="text-xs font-bold text-[#636366]">{vault.currency}</span>
+              <div className="p-4 rounded-2xl bg-[#F9F9FB] border border-[#E5E5EA] space-y-1">
+                <span className="text-[11px] text-[#8E8E93] font-medium block">Available Balance</span>
+                <div className="text-2xl font-black text-[#1C1C1E]">
+                  ₦{vault.balance.toLocaleString()} <span className="text-xs font-bold text-[#8E8E93]">{vault.currency}</span>
                 </div>
               </div>
 
-              <div className="text-xs text-[#636366] font-mono truncate bg-[#F5F5F7] px-3 py-2 rounded-xl flex items-center justify-between">
-                <span className="font-sans font-bold text-[#8E8E93]">Vault ID</span>
-                <span className="font-bold">{vault.accountNumber.slice(0, 10)}...{vault.accountNumber.slice(-8)}</span>
+              <div className="text-[11px] text-[#8E8E93] font-mono truncate bg-[#F5F5F7] p-2 rounded-xl">
+                Address: {vault.accountNumber}
               </div>
             </div>
 
